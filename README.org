@@ -1,0 +1,6 @@
+Check the face of a character by clicking the buffer.
+
+#+begin_src emacs-lisp
+(when (require 'facecheck nil t)
+  (facecheck-mode 1))
+#+end_src
