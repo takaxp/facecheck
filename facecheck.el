@@ -1,9 +1,9 @@
 ;;; facecheck.el --- Check face at point  -*- lexical-binding: t; -*-
-;; Copyright (C) 2019 Takaaki ISHIKAWA
+;; Copyright (C) 2021 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Keywords: extensions, convenience
-;; Version: 0.0.1
+;; Version: 0.0.2
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; URL: https://github.com/takaxp/facecheck
 ;; Package-Requires: ((emacs "24.4"))
@@ -34,7 +34,6 @@
     map)
   "Keymap for `facecheck'.")
 
-(defvar facecheck--global-hl-line-mode nil)
 (defvar facecheck--mouse-highlight nil)
 (defvar facecheck--mouse-1-click-follows-link nil)
 
@@ -43,22 +42,23 @@
   (setq facecheck--mouse-highlight mouse-highlight
         facecheck--mouse-1-click-follows-link mouse-1-click-follows-link)
   (setq mouse-highlight nil
-        mouse-1-click-follows-link nil)
-  (when (setq facecheck--global-hl-line-mode global-hl-line-mode)
-    (global-hl-line-mode -1)))
+        mouse-1-click-follows-link nil))
 
 (defun facecheck--abort ()
   "Abort."
   (setq mouse-highlight facecheck--mouse-highlight
-        mouse-1-click-follows-link facecheck--mouse-1-click-follows-link)
-  (when facecheck--global-hl-line-mode
-    (global-hl-line-mode 1)))
+        mouse-1-click-follows-link facecheck--mouse-1-click-follows-link))
 
 ;;;###autoload
 (defun facecheck-at-point ()
   "Call describe face at point."
   (interactive)
-  (describe-face (face-at-point)))
+  (let ((hl-line hl-line-mode))
+    (when hl-line
+      (hl-line-mode -1))
+    (describe-face (face-at-point))
+    (when hl-line
+      (hl-line-mode 1))))
 
 (define-minor-mode facecheck-mode
   "Toggle the minor mode `facecheck-mode'."
